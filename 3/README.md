@@ -10,6 +10,7 @@ called contract address: 0x3EbA7DdeB28555d160f758fe30277896D2cc634f
 
 ABI
 
+```
 [
     {
       "inputs": [],
@@ -43,3 +44,4 @@ ABI
       "type": "function"
     }
   ]
+  ```
