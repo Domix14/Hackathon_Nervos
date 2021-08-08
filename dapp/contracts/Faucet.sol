@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 contract Faucet {
   mapping(address => uint256) previousReceivers;
   uint256 delay = 60 minutes;
-  uint256 amount;
+  uint256 amount = 1000000000;
 
   function receive(address payable receiver) public payable {
     require(allowedToReceive(receiver));

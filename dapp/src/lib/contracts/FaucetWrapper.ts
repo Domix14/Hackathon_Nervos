@@ -18,8 +18,15 @@ export class FaucetWrapper {
         return Boolean(this.address);
     }
 
-    async receiveCKB(receiverAddress: string, fromAddress: string) {
+    async receive(receiverAddress: string, fromAddress: string) {
         await this.contract.methods.receive(receiverAddress).call({ from: fromAddress });
+    }
+
+    async deposit(fromAddress: string, amount: number) {
+        await this.contract.send({
+            from: fromAddress,
+            value: amount
+            } as any);
     }
 
     async deploy(fromAddress: string) {

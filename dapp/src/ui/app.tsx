@@ -164,11 +164,18 @@ export function App() {
                 placeholder="address"
                 onChange={e => setReceiverAddress(e.target.value)}
             />
-            <button onClick={() => {receiveCKB(receiverAddress)}} disabled={!receiverAddress || !contract}>
+            <button onClick={() => {receive(receiverAddress)}} disabled={!receiverAddress || !contract}>
                 Receive 10 CKB
             </button>
             <br />
             <br />
+            <input
+                placeholder="0"
+                onChange={e => setDepositAmount(e.target.value)}
+            />
+            <button onClick={() => {deposit()}} disabled={!contract}>
+                Deposit
+            </button>
             <br />
             <br />
             <hr />
