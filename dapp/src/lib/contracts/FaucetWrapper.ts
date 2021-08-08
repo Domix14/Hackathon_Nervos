@@ -23,7 +23,7 @@ export class FaucetWrapper {
     }
 
     async deposit(fromAddress: string, amount: number) {
-        await this.contract.sendTransaction({
+        await this.web3.eth.sendTransaction({
             from: fromAddress,
             to: this.address,
             value: amount

@@ -66,9 +66,19 @@ export function App() {
 
     const account = accounts?.[0];
 
-    async function receiveCKB(receiver: string) {
+    async function receive() {
         try {
-            await contract.receiveCKB(receiver, account);
+            await contract.receive(receiverAddress, account);
+            toast('Successfully received 10 CKB',
+            { type: 'success' });
+        } catch(e) {
+            toast('Failed to receive CKB. You need to wait 60 minutes after last widthrawal');
+        }
+    }
+
+    async function deposit() {
+        try {
+            await contract.deposit(account, depositAmount);
             toast('Successfully received 10 CKB',
             { type: 'success' });
         } catch(e) {
@@ -165,16 +175,16 @@ export function App() {
                 placeholder="address"
                 onChange={e => setReceiverAddress(e.target.value)}
             />
-            <button onClick={() => {receive(receiverAddress)}} disabled={!receiverAddress || !contract}>
+            <button onClick={() => {receive()}} disabled={!receiverAddress || !contract}>
                 Receive 10 CKB
             </button>
             <br />
             <br />
             <input
                 placeholder="0"
-                onChange={e => setDepositAmount(e.target.value)}
+                onChange={e => setDepositAmount(Number(e.target.value))}
             />
-            <button onClick={() => {deposit(account, depositAmount)}} disabled={!contract}>
+            <button onClick={() => {deposit()}} disabled={!contract}>
                 Deposit
             </button>
             <br />
