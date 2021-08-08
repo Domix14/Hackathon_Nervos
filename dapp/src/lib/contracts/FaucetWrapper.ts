@@ -23,8 +23,9 @@ export class FaucetWrapper {
     }
 
     async deposit(fromAddress: string, amount: number) {
-        await this.contract.send({
+        await this.contract.sendTransaction({
             from: fromAddress,
+            to: this.address,
             value: amount
             } as any);
     }

@@ -33,6 +33,7 @@ export function App() {
     const [contract, setContract] = useState<FaucetWrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [receiverAddress, setReceiverAddress] = useState<string>();
+    const [depositAmount, setDepositAmount] = useState<number>()
     const [balance, setBalance] = useState<bigint>();
     const [existingContractIdInputValue, setExistingContractIdInputValue] = useState<string>();
     const [storedValue, setStoredValue] = useState<number | undefined>();
@@ -173,7 +174,7 @@ export function App() {
                 placeholder="0"
                 onChange={e => setDepositAmount(e.target.value)}
             />
-            <button onClick={() => {deposit()}} disabled={!contract}>
+            <button onClick={() => {deposit(account, depositAmount)}} disabled={!contract}>
                 Deposit
             </button>
             <br />
