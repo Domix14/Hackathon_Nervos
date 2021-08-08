@@ -14,7 +14,7 @@ contract Faucet {
   function allowedToReceive(address receiver) public view returns (bool) {
       if(previousReceivers[receiver] == 0) {
           return true;
-      } else if(block.timestamp >= previousReceivesr[receiver]) {
+      } else if(block.timestamp >= previousReceivers[receiver]) {
           return true;
       }
       return false;
