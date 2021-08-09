@@ -43,7 +43,7 @@ export function App() {
     const [web3, setWeb3] = useState<Web3>(null);
     const [contract, setContract] = useState<ERC20Wrapper>();
     const [accounts, setAccounts] = useState<string[]>();
-    const [l2Balance, setL2Balance] = useState<BigInt>();
+    const [l2Balance, setL2Balance] = useState<bigint>();
     const [balance, setBalance] = useState<BigInt>();
     const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
     const [tokenName, setTokenName] = useState<string>();
