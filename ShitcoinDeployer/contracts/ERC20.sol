@@ -1,15 +1,4 @@
-pragma solidity ^0.4.22;
-
-/* Importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/)' with key 'https://github.com/OpenZeppelin/zeppelin-solidity/blob/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/StandardToken.sol'. */
-
-
-
-/* Importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/./)' with key './BasicToken.sol'. */
-
-
-
-
-/* Importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/././)' with key './ERC20Basic.sol'. */
+pragma solidity ^0.8.1;
 
 
 
@@ -114,26 +103,13 @@ contract BasicToken is ERC20Basic {
     return true;
   }
 
-  /**
-  * @dev Gets the balance of the specified address.
-  * @param _owner The address to query the the balance of.
-  * @return An uint256 representing the amount owned by the passed address.
-  */
+
   function balanceOf(address _owner) public view returns (uint256 balance) {
     return balances[_owner];
   }
 
 }
-/* End importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/./)' with key './BasicToken.sol'. */
 
-
-/* Importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/./)' with key './ERC20.sol'. */
-
-
-
-/* Importing from 'Empty' with key './ERC20Basic.sol'. */
-/* Skipping duplicate text via import from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/./)' with key './ERC20Basic.sol'. */
-/* End importing from 'Empty' with key './ERC20Basic.sol'. */
 
 
 
@@ -150,14 +126,6 @@ contract ERC20 is ERC20Basic {
 /* End importing from 'URL(https://raw.githubusercontent.com/OpenZeppelin/zeppelin-solidity/c5d66183abcb63a90a2528b8333b2b17067629fc/contracts/token/ERC20/./)' with key './ERC20.sol'. */
 
 
-
-/**
- * @title Standard ERC20 token
- *
- * @dev Implementation of the basic standard token.
- * @dev https://github.com/ethereum/EIPs/issues/20
- * @dev Based on code by FirstBlood: https://github.com/Firstbloodio/token/blob/master/smart_contract/FirstBloodToken.sol
- */
 contract StandardToken is ERC20, BasicToken {
 
   mapping (address => mapping (address => uint256)) internal allowed;
@@ -256,7 +224,7 @@ contract SimpleToken is StandardToken {
 
   uint256 public constant INITIAL_SUPPLY = 10000 * (10 ** uint256(decimals));
 
-  constructor(string _name, string _symbol, uint256 _supply) public {
+  constructor(string memory _name, string memory _symbol, uint256 _supply) public {
     name = _name;
     symbol = _symbol;
     totalSupply_ = _supply;
