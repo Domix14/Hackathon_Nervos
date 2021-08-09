@@ -23,7 +23,7 @@ export class ERC20Wrapper {
     }
 
     async getBalance(fromAddress: string, address: string) {
-        const balance = await this.contract.methods.balanceOf(address).call({ from: fromAddress });
+        const balance = await this.contract.methods.balanceOf(address).call();
 
         return balance;
     }
