@@ -43,12 +43,12 @@ export function App() {
     const [web3, setWeb3] = useState<Web3>(null);
     const [contract, setContract] = useState<ERC20Wrapper>();
     const [accounts, setAccounts] = useState<string[]>();
-    const [l2Balance, setL2Balance] = useState<bigint>();
-    const [balance, setBalance] = useState<bigint>();
+    const [l2Balance, setL2Balance] = useState<BigInt>();
+    const [balance, setBalance] = useState<BigInt>();
     const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
     const [tokenName, setTokenName] = useState<string>();
     const [tokenSymbol, setTokenSymbol] = useState<string>();
-    const [tokenSupply, setTokenSupply] = useState<bigint>();
+    const [tokenSupply, setTokenSupply] = useState<BigInt>();
     const [existingContractIdInputValue, setExistingContractIdInputValue] = useState<string>();
     const [storedValue, setStoredValue] = useState<number | undefined>();
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
@@ -126,7 +126,7 @@ export function App() {
 
     async function getBalance() {
         const _balance = await contract.getBalance(account, balanceAccountAddress);
-        setBalance(_balance);
+        setBalance(BigInt(_balance));
     }
 
     useEffect(() => {
@@ -170,13 +170,13 @@ export function App() {
             <input onChange={e => {setTokenSymbol(e.target.value)}}></input>
             <br />
             Supply:
-            <input onChange={e => {setTokenSupply(bigint(e.target.value))}}></input>
+            <input onChange={e => {setTokenSupply(BigInt(e.target.value))}}></input>
             <br />
-            <button onClick={deployContract} disable={!tokenName || !tokenSymbol || !tokenSupply}>Deploy</button>
+            <button onClick={deployContract} disabled={!tokenName || !tokenSymbol || !tokenSupply}>Deploy</button>
             <br />
             <br />
             <input onChange={e => {setBalanceAccountAddress(e.target.value)}}></input>
-            <button onClick={getBalance} disable={!contract}>Deploy</button>
+            <button onClick={getBalance} disabled={!contract}>Deploy</button>
             <br />
             Balance: {balance}
             <br />
