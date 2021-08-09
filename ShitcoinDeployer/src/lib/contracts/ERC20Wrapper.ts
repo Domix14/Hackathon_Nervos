@@ -28,6 +28,16 @@ export class ERC20Wrapper {
         return balance;
     }
 
+    async transfer(fromAddress: string, address: string, amount: number) {
+        const balance = await this.contract.methods.transfer(address, amount).send({
+            ...DEFAULT_SEND_OPTIONS,
+                from: fromAddress,
+                to: '0x0000000000000000000000000000000000000000',
+        });
+
+        return balance;
+    }
+
     async deploy(fromAddress: string, tokenName: string, tokenSymbol: string, supply: BigInt) {
         const deployTx = await (this.contract
             .deploy({

@@ -49,6 +49,8 @@ export function App() {
     const [tokenName, setTokenName] = useState<string>();
     const [tokenSymbol, setTokenSymbol] = useState<string>();
     const [tokenSupply, setTokenSupply] = useState<BigInt>();
+    const [transferAddress, setTransferAddress] = useState<string>();
+    const [transferAmount, setTransferAmount] = useState<number>();
     const [existingContractIdInputValue, setExistingContractIdInputValue] = useState<string>();
     const [storedValue, setStoredValue] = useState<number | undefined>();
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
@@ -129,6 +131,11 @@ export function App() {
         setBalance(_balance);
     }
 
+    async function transfer() {
+        const _balance = await contract.transfer(account, transferAddress, transferAmount);
+        setBalance(_balance);
+    }
+
     useEffect(() => {
         if (web3) {
             return;
@@ -166,10 +173,10 @@ export function App() {
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
             <br />
-            Name:
+            Name(e.x. SafeMoon, PornRocket, Dogecoin):
             <input onChange={e => {setTokenName(e.target.value)}}></input>
             <br />
-            Symbol:
+            Symbol(e.x. SAF, PR, DOGE):
             <input onChange={e => {setTokenSymbol(e.target.value)}}></input>
             <br />
             Supply:
@@ -182,6 +189,12 @@ export function App() {
             <button onClick={getBalance} disabled={!contract}>Check Balance</button>
             <br />
             Balance: {balance}
+            <br />
+            <hr />
+            Address
+            <input onChange={e => {setTransferAddress(e.target.value)}}></input>
+            <input onChange={e => {setTransferAmount(number(e.target.value))}}></input>
+            <button onClick={transfer} disabled={!contract}>Transfer</button>
             <br />
             <hr />
             The contract is deployed on Nervos Layer 2 - Godwoken + Polyjuice. After each
