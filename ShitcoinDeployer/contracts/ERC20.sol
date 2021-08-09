@@ -2,12 +2,10 @@ pragma solidity ^0.8.1;
 
 contract BasicToken {
 
-  string public constant name;
-  string public constant symbol;
-  uint8 public constant decimals = 18;
+  string public name;
+  string public symbol;
+  uint8 public decimals = 18;
   uint256 totalSupply;
-
-  uint256 public constant INITIAL_SUPPLY = 10000 * (10 ** uint256(decimals));
 
   constructor(string memory _name, string memory _symbol, uint256 _supply) public {
     name = _name;
