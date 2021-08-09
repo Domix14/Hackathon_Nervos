@@ -133,7 +133,6 @@ export function App() {
 
     async function transfer() {
         const _balance = await contract.transfer(account, transferAddress, transferAmount);
-        setBalance(_balance);
     }
 
     useEffect(() => {

@@ -16,7 +16,7 @@ contract ERC20 {
   }
 
   function transfer(address recipient, uint256 value) public {
-    require(balances[msg.sender] > value)
+    require(balances[msg.sender] > value);
     balances[msg.sender] -= value;
     balances[recipient] += value;
   }
