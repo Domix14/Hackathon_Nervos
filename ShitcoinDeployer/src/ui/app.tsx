@@ -192,7 +192,7 @@ export function App() {
             <hr />
             Address
             <input onChange={e => {setTransferAddress(e.target.value)}}></input>
-            <input onChange={e => {setTransferAmount(number(e.target.value))}}></input>
+            <input onChange={e => {setTransferAmount(Number(e.target.value))}}></input>
             <button onClick={transfer} disabled={!contract}>Transfer</button>
             <br />
             <hr />
