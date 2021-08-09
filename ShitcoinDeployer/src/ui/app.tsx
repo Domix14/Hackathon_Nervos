@@ -44,7 +44,7 @@ export function App() {
     const [contract, setContract] = useState<ERC20Wrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
-    const [balance, setBalance] = useState<BigInt>(0);
+    const [balance, setBalance] = useState<string>();
     const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
     const [tokenName, setTokenName] = useState<string>();
     const [tokenSymbol, setTokenSymbol] = useState<string>();
@@ -126,7 +126,7 @@ export function App() {
 
     async function getBalance() {
         const _balance = await contract.getBalance(account, balanceAccountAddress);
-        setBalance(BigInt(_balance));
+        setBalance(_balance);
     }
 
     useEffect(() => {
@@ -159,7 +159,7 @@ export function App() {
             Your Polyjuice address: <b>{polyjuiceAddress || ' - '}</b>
             <br />
             <br />
-            Contract address: <b>{polyjuiceAddress || ' - '}</b>
+            Contract address: <b>{contract?.address || '-'}</b>
             <br />
             <br />
             Nervos Layer 2 balance:{' '}
