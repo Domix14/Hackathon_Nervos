@@ -28,7 +28,7 @@ export class ERC20Wrapper {
         return balance;
     }
 
-    async deploy(fromAddress: string, tokenName: string, tokenSymbol: string, supply: bigint) {
+    async deploy(fromAddress: string, tokenName: string, tokenSymbol: string, supply: BigInt) {
         const deployTx = await (this.contract
             .deploy({
                 data: ERC20JSON.bytecode,
