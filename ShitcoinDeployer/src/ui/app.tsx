@@ -196,7 +196,7 @@ export function App() {
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
             SUDT balance:{' '}
-            <b>{sudtBalance ? (sudtBalance / 10n ** 8n).toString() : <LoadingIndicator />} USDT</b>
+            <b>{sudtBalance ? sudtBalance : <LoadingIndicator />} SUDT</b>
             <br />
             Name(e.x. SafeMoon, PornRocket, Dogecoin):
             <input onChange={e => {setTokenName(e.target.value)}}></input>
