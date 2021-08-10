@@ -143,12 +143,17 @@ export function App() {
     }
 
     useEffect(() => {
+        if(!web3) {
+            return;
+        }
+
         (async () => {
+            const addressTranslator = new AddressTranslator();
             const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi as any, '0x0d14B7568d98Ff62621d894b227b33177E5b3b5f')
-            const _sudtBalance = BigInt(await erc20Contract.methods.balanceOf(polyjuiceAddress).call({
+            const _sudtBalance = BigInt(await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(accounts[0])).call({
                 from: accounts[0]
             }));
-        setsudtBalance(_sudtBalance);
+            setsudtBalance(_sudtBalance);
         })();
         
     })
@@ -200,7 +205,7 @@ export function App() {
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
             SUDT balance:{' '}
-            <b>{sudtBalance ? sudtBalance : <LoadingIndicator />} SUDT</b>
+            <b>{sudtBalance ? sudtBalance.toString() : <LoadingIndicator />} SUDT</b>
             <br />
             Name(e.x. SafeMoon, PornRocket, Dogecoin):
             <input onChange={e => {setTokenName(e.target.value)}}></input>
