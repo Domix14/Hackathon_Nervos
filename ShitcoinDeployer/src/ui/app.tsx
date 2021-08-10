@@ -45,7 +45,7 @@ export function App() {
     const [contract, setContract] = useState<SimpleTokenWrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
-    const [sudtBalance, setsudtBalance] = useState<string>();
+    const [sudtBalance, setsudtBalance] = useState<bigint>();
     const [balance, setBalance] = useState<string>();
     const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
     const [tokenName, setTokenName] = useState<string>();
@@ -69,7 +69,7 @@ export function App() {
             (async () => {
                 const _depositAddress = await addressTranslator.getLayer2DepositAddress(web3, account);
                 setDepositAddress(_depositAddress.addressString);
-            })
+            })();
             
             
             setPolyjuiceAddress(addressTranslator.ethAddressToGodwokenShortAddress(accounts?.[0]));
@@ -164,7 +164,7 @@ export function App() {
                 const _sudtBalance = await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(_accounts[0])).call({
                     from: _accounts[0]
                 });
-                setsudtBalance(_sudtBalance);
+                setsudtBalance(BigInt(_sudtBalance));
             }
         })();
     });
@@ -191,8 +191,12 @@ export function App() {
             <br />
             <br />
             Nervos Layer 2 balance:{' '}
+            <br/>
+            CKB balance:{' '}
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
+            SUDT balance:{' '}
+            <b>{sudtBalance ? (sudtBalance / 10n ** 8n).toString() : <LoadingIndicator />} USDT</b>
             <br />
             Name(e.x. SafeMoon, PornRocket, Dogecoin):
             <input onChange={e => {setTokenName(e.target.value)}}></input>
