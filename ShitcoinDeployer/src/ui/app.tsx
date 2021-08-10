@@ -9,8 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PolyjuiceHttpProvider } from '@polyjuice-provider/web3';
 import { AddressTranslator } from 'nervos-godwoken-integration';
 
-import { ERC20Wrapper } from '../lib/contracts/ERC20Wrapper';
+import { SimpleTokenWrapper } from '../lib/contracts/SimpleTokenWrapper';
 import { CONFIG } from '../config';
+import { ERC20JSON } from '../../build/contracts/ERC20.json'
 
 async function createWeb3() {
     // Modern dapp browsers...
@@ -41,18 +42,18 @@ async function createWeb3() {
 
 export function App() {
     const [web3, setWeb3] = useState<Web3>(null);
-    const [contract, setContract] = useState<ERC20Wrapper>();
+    const [contract, setContract] = useState<SimpleTokenWrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
+    const [sudtBalance, setsudtBalance] = useState<string>();
     const [balance, setBalance] = useState<string>();
     const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
     const [tokenName, setTokenName] = useState<string>();
     const [tokenSymbol, setTokenSymbol] = useState<string>();
     const [tokenSupply, setTokenSupply] = useState<BigInt>();
     const [transferAddress, setTransferAddress] = useState<string>();
+    const [depositAddress, setDepositAddress] = useState<string>();
     const [transferAmount, setTransferAmount] = useState<number>();
-    const [existingContractIdInputValue, setExistingContractIdInputValue] = useState<string>();
-    const [storedValue, setStoredValue] = useState<number | undefined>();
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
     const [transactionInProgress, setTransactionInProgress] = useState(false);
@@ -64,6 +65,13 @@ export function App() {
     useEffect(() => {
         if (accounts?.[0]) {
             const addressTranslator = new AddressTranslator();
+
+            (async () => {
+                const _depositAddress = await addressTranslator.getLayer2DepositAddress(web3, account);
+                setDepositAddress(_depositAddress.addressString);
+            })
+            
+            
             setPolyjuiceAddress(addressTranslator.ethAddressToGodwokenShortAddress(accounts?.[0]));
         } else {
             setPolyjuiceAddress(undefined);
@@ -94,7 +102,7 @@ export function App() {
     const account = accounts?.[0];
 
     async function deployContract() {
-        const _contract = new ERC20Wrapper(web3);
+        const _contract = new SimpleTokenWrapper(web3);
 
         try {
             setDeployTxHash(undefined);
@@ -119,11 +127,10 @@ export function App() {
     }
 
     async function setExistingContractAddress(contractAddress: string) {
-        const _contract = new ERC20Wrapper(web3);
+        const _contract = new SimpleTokenWrapper(web3);
         _contract.useDeployed(contractAddress.trim());
 
         setContract(_contract);
-        setStoredValue(undefined);
     }
 
     async function getBalance() {
@@ -151,6 +158,13 @@ export function App() {
             if (_accounts && _accounts[0]) {
                 const _l2Balance = BigInt(await _web3.eth.getBalance(_accounts[0]));
                 setL2Balance(_l2Balance);
+
+                const addressTranslator = new AddressTranslator();
+                const erc20Contract = new web3.eth.Contract(ERC20JSON, '0x6C2c699B1460789C44164ee9BdC624cDcaBAc999')
+                const _sudtBalance = await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(_accounts[0])).call({
+                    from: _accounts[0]
+                });
+                setsudtBalance(_sudtBalance);
             }
         })();
     });
@@ -165,7 +179,15 @@ export function App() {
             Your Polyjuice address: <b>{polyjuiceAddress || ' - '}</b>
             <br />
             <br />
+            Deposit address: <b>{depositAddress || ' - '}</b>
+            <br />
+            You can deposit ETH using Force Bridge and deposit adddress <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos"><b>LINK</b></a>
+            <br />
+            <br />
             Contract address: <b>{contract?.address || '-'}</b>
+            <br />
+            <br />
+            Contract tx hash: <b>{deployTxHash || '-'}</b>
             <br />
             <br />
             Nervos Layer 2 balance:{' '}

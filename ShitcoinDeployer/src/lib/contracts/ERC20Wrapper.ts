@@ -1,21 +1,21 @@
 import Web3 from 'web3';
-import * as ERC20JSON from '../../../build/contracts/ERC20.json';
-import { ERC20 } from '../../types/ERC20';
+import * as SimpleTokenJSON from '../../../build/contracts/SimpleToken.json';
+import { SimpleToken } from '../../types/SimpleToken';
 
 const DEFAULT_SEND_OPTIONS = {
     gas: 6000000
 };
 
-export class ERC20Wrapper {
+export class SimpleTokenWrapper {
     web3: Web3;
 
-    contract: ERC20;
+    contract: SimpleToken;
 
     address: string;
 
     constructor(web3: Web3) {
         this.web3 = web3;
-        this.contract = new web3.eth.Contract(ERC20JSON.abi as any) as any;
+        this.contract = new web3.eth.Contract(SimpleTokenJSON.abi as any) as any;
     }
 
     get isDeployed() {
@@ -41,7 +41,7 @@ export class ERC20Wrapper {
     async deploy(fromAddress: string, tokenName: string, tokenSymbol: string, supply: BigInt) {
         const deployTx = await (this.contract
             .deploy({
-                data: ERC20JSON.bytecode,
+                data: SimpleTokenJSON.bytecode,
                 arguments: [tokenName, tokenSymbol, supply]
             })
             .send({
