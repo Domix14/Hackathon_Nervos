@@ -160,7 +160,7 @@ export function App() {
                 setL2Balance(_l2Balance);
 
                 const addressTranslator = new AddressTranslator();
-                const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi, '0x6C2c699B1460789C44164ee9BdC624cDcaBAc999')
+                const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi as any, '0x6C2c699B1460789C44164ee9BdC624cDcaBAc999')
                 const _sudtBalance = await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(_accounts[0])).call({
                     from: _accounts[0]
                 });
