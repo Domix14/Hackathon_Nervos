@@ -143,6 +143,17 @@ export function App() {
     }
 
     useEffect(() => {
+        (async () => {
+            const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi as any, '0x0d14B7568d98Ff62621d894b227b33177E5b3b5f')
+            const _sudtBalance = BigInt(await erc20Contract.methods.balanceOf(polyjuiceAddress).call({
+                from: accounts[0]
+            }));
+        setsudtBalance(_sudtBalance);
+        })();
+        
+    })
+
+    useEffect(() => {
         if (web3) {
             return;
         }
@@ -158,13 +169,6 @@ export function App() {
             if (_accounts && _accounts[0]) {
                 const _l2Balance = BigInt(await _web3.eth.getBalance(_accounts[0]));
                 setL2Balance(_l2Balance);
-
-                const addressTranslator = new AddressTranslator();
-                const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi as any, '0x0d14B7568d98Ff62621d894b227b33177E5b3b5f')
-                const _sudtBalance = BigInt(await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(_accounts[0])).call({
-                    from: _accounts[0]
-                }));
-                setsudtBalance(_sudtBalance);
             }
         })();
     });
