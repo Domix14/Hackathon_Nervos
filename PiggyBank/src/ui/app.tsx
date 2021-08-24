@@ -47,7 +47,7 @@ export function App() {
 
     const [remainingTime, setRemainingTime] = useState<string>("0");
     const [depositAmount, setDepositAmount] = useState<string>("0");
-    const [unlockedBalance, setUnlockedBalance] = useState<string>();
+    const [unlockedBalance, setUnlockedBalance] = useState<string>("0");
     const [timelock, setTimelock] = useState<string>("0");
     const [bankCreated, setBankCreated] = useState(false);
     const [contractAddress, setContractAddress] = useState<string>();
@@ -153,17 +153,63 @@ export function App() {
     }
 
     async function createBank() {
-        const _state = await contract.createBank(account, timelock);
-        setBankCreated(_state);
+        try {
+            setTransactionInProgress(true);
+
+            await contract.createBank(account, timelock);
+            setBankCreated(true);
+            toast(
+                'Successfully created PiggyBank. Now you can deposit your savings',
+                { type: 'success' }
+            );
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                'There was an error sending your transaction. Please check developer console.'
+            );
+            setBankCreated(false);
+        } finally {
+            setTransactionInProgress(false);
+        }
     }
 
     async function deposit() {
-        await contract.deposit(account, web3.utils.toWei(depositAmount));
-        setDepositAmount("");
+        try {
+            setTransactionInProgress(true);
+
+            await contract.deposit(account, web3.utils.toWei(depositAmount));
+            setDepositAmount("");
+            toast(
+                'Successful deposit!',
+                { type: 'success' }
+            );
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                'There was an error sending your transaction. Please check developer console.'
+            );
+        } finally {
+            setTransactionInProgress(false);
+        }
     }
 
     async function widthraw() {
-        await contract.widthraw(account);
+        try {
+            setTransactionInProgress(true);
+
+            await contract.widthraw(account);
+            toast(
+                'Successful widthrawal!',
+                { type: 'success' }
+            );
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                'There was an error sending your transaction. Please check developer console.'
+            );
+        } finally {
+            setTransactionInProgress(false);
+        }
     }
 
     useEffect(() => {
@@ -228,8 +274,8 @@ export function App() {
 
             <div style={{ display: (!bankCreated ? 'block' : 'none') }}>
             Set timelock and create own PiggyBank! You will be able to widthraw your savings when timelock ends.
-            Timelock: <input onChange={e => {setTimelock(e.target.value)}}></input> minutes
-            <button onClick={createBank}>Create Bank</button>
+            <br />
+            Timelock: <input onChange={e => {setTimelock(e.target.value)}}></input> minutes   <button onClick={createBank}>Create Bank</button>
             </div>
 
             <div style={{ display: ((bankCreated && remainingTime == "0" && unlockedBalance != "0") ? 'block' : 'none') }}>
