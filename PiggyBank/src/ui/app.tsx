@@ -170,6 +170,7 @@ export function App() {
             setBankCreated(false);
         } finally {
             setTransactionInProgress(false);
+            getRemainingTime();
         }
     }
 
@@ -243,7 +244,7 @@ export function App() {
         if((unlockedBalance != "0" || remainingTime != "0")) {
             setBankCreated(true);
         }
-    })
+    }, [unlockedBalance, remainingTime, bankCreated])
     
 
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
