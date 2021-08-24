@@ -178,8 +178,7 @@ export function App() {
         try {
             setTransactionInProgress(true);
 
-            await contract.deposit(account, web3.utils.toWei(depositAmount));
-            setDepositAmount("");
+            await contract.deposit(account, Number(web3.utils.toWei(depositAmount)));
             toast(
                 'Successful deposit!',
                 { type: 'success' }
@@ -191,6 +190,7 @@ export function App() {
             );
         } finally {
             setTransactionInProgress(false);
+            setDepositAmount("");
         }
     }
 

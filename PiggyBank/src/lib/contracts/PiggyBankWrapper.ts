@@ -39,11 +39,11 @@ export class PiggyBankWrapper {
         })
     }
 
-    async deposit(fromAddress: string, amount: string) {
+    async deposit(fromAddress: string, value: number) {
         await this.contract.methods.deposit().send({
             ...DEFAULT_SEND_OPTIONS,
-                value: amount,
                 from: fromAddress,
+                value
         });
     }
 
