@@ -36,7 +36,6 @@ export class PiggyBankWrapper {
         await this.contract.methods.createBank(fromAddress, timelock).send({
             ...DEFAULT_SEND_OPTIONS,
                 from: fromAddress,
-                to: '0x0000000000000000000000000000000000000000',
         })
     }
 
@@ -45,7 +44,6 @@ export class PiggyBankWrapper {
             ...DEFAULT_SEND_OPTIONS,
                 value: amount,
                 from: fromAddress,
-                to: '0x0000000000000000000000000000000000000000',
         });
     }
 
@@ -53,7 +51,6 @@ export class PiggyBankWrapper {
         await this.contract.methods.widthraw().send({
             ...DEFAULT_SEND_OPTIONS,
                 from: fromAddress,
-                to: '0x0000000000000000000000000000000000000000',
         });
     }
 
