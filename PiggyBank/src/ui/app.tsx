@@ -9,9 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PolyjuiceHttpProvider } from '@polyjuice-provider/web3';
 import { AddressTranslator } from 'nervos-godwoken-integration';
 
-import { SimpleTokenWrapper } from '../lib/contracts/SimpleTokenWrapper';
+import { PiggyBankWrapper } from '../lib/contracts/PiggyBankWrapper';
 import { CONFIG } from '../config';
-import * as CompiledContractArtifact from '../../build/contracts/ERC20.json';
 
 async function createWeb3() {
     // Modern dapp browsers...
@@ -42,36 +41,25 @@ async function createWeb3() {
 
 export function App() {
     const [web3, setWeb3] = useState<Web3>(null);
-    const [contract, setContract] = useState<SimpleTokenWrapper>();
+    const [contract, setContract] = useState<PiggyBankWrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
-    const [sudtBalance, setsudtBalance] = useState<bigint>();
-    const [balance, setBalance] = useState<string>();
-    const [balanceAccountAddress, setBalanceAccountAddress] = useState<string>();
-    const [tokenName, setTokenName] = useState<string>();
-    const [tokenSymbol, setTokenSymbol] = useState<string>();
-    const [tokenSupply, setTokenSupply] = useState<BigInt>();
-    const [transferAddress, setTransferAddress] = useState<string>();
-    const [depositAddress, setDepositAddress] = useState<string>();
-    const [transferAmount, setTransferAmount] = useState<number>();
+
+    const [remainingTime, setRemainingTime] = useState<number>();
+    const [depositAmount, setDepositAmount] = useState<string>();
+    const [unlockedBalance, setUnlockedBalance] = useState<number>();
+    const [timelock, setTimelock] = useState<number>();
+    const [bankCreated, setBankCreated] = useState(false);
+
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
     const [transactionInProgress, setTransactionInProgress] = useState(false);
     const toastId = React.useRef(null);
-    const [newStoredNumberInputValue, setNewStoredNumberInputValue] = useState<
-        number | undefined
-    >();
+
 
     useEffect(() => {
         if (accounts?.[0]) {
             const addressTranslator = new AddressTranslator();
-
-            (async () => {
-                const _depositAddress = await addressTranslator.getLayer2DepositAddress(web3, account);
-                setDepositAddress(_depositAddress.addressString);
-            })();
-            
-            
             setPolyjuiceAddress(addressTranslator.ethAddressToGodwokenShortAddress(accounts?.[0]));
         } else {
             setPolyjuiceAddress(undefined);
@@ -102,13 +90,13 @@ export function App() {
     const account = accounts?.[0];
 
     async function deployContract() {
-        const _contract = new SimpleTokenWrapper(web3);
+        const _contract = new PiggyBankWrapper(web3);
 
         try {
             setDeployTxHash(undefined);
             setTransactionInProgress(true);
 
-            const transactionHash = await _contract.deploy(account, tokenName, tokenSymbol, tokenSupply);
+            const transactionHash = await _contract.deploy(account);
 
             setDeployTxHash(transactionHash);
             setExistingContractAddress(_contract.address);
@@ -127,36 +115,35 @@ export function App() {
     }
 
     async function setExistingContractAddress(contractAddress: string) {
-        const _contract = new SimpleTokenWrapper(web3);
+        const _contract = new PiggyBankWrapper(web3);
         _contract.useDeployed(contractAddress.trim());
 
         setContract(_contract);
     }
 
-    async function getBalance() {
-        const _balance = await contract.getBalance(account, balanceAccountAddress);
-        setBalance(_balance);
+    async function getRemainingTime() {
+        const _remainingTime = await contract.getRemainingTimelock(account);
+        setRemainingTime(_remainingTime);
     }
 
-    async function transfer() {
-        const _balance = await contract.transfer(account, transferAddress, transferAmount);
+    async function getUnlockedBalance() {
+        const _unlockedBalance = await contract.getUnlockedBalance(account);
+        setUnlockedBalance(_unlockedBalance);
     }
 
-    useEffect(() => {
-        if(!web3) {
-            return;
-        }
+    async function createBank() {
+        const _state = await contract.createBank(account, timelock);
+        setBankCreated(_state);
+    }
 
-        (async () => {
-            const addressTranslator = new AddressTranslator();
-            const erc20Contract = new web3.eth.Contract(CompiledContractArtifact.abi as any, '0x0d14B7568d98Ff62621d894b227b33177E5b3b5f')
-            const _sudtBalance = BigInt(await erc20Contract.methods.balanceOf(addressTranslator.ethAddressToGodwokenShortAddress(accounts[0])).call({
-                from: accounts[0]
-            }));
-            setsudtBalance(_sudtBalance);
-        })();
-        
-    })
+    async function deposit() {
+        await contract.deposit(account, web3.utils.toWei(depositAmount));
+        setDepositAmount("");
+    }
+
+    async function widthraw() {
+        await contract.widthraw(account);
+    }
 
     useEffect(() => {
         if (web3) {
@@ -178,6 +165,19 @@ export function App() {
         })();
     });
 
+    useEffect(() => {
+        if(!contract) {
+            return;
+        }
+
+        getUnlockedBalance();
+        getRemainingTime();
+
+        if(unlockedBalance != 0 || remainingTime != 0) {
+            setBankCreated(true);
+        }
+    })
+
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
 
     return (
@@ -188,52 +188,25 @@ export function App() {
             Your Polyjuice address: <b>{polyjuiceAddress || ' - '}</b>
             <br />
             <br />
-            Deposit address: <b>{depositAddress || ' - '}</b>
-            <br />
-            You can deposit ETH using Force Bridge and deposit adddress <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos"><b>LINK</b></a>
-            <br />
-            <br />
             Contract address: <b>{contract?.address || '-'}</b>
             <br />
             <br />
-            Contract tx hash: <b>{deployTxHash || '-'}</b>
-            <br />
-            <br />
             Nervos Layer 2 balance:{' '}
-            <br/>
-            CKB balance:{' '}
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
-            SUDT balance:{' '}
-            <b>{sudtBalance ? sudtBalance.toString() : <LoadingIndicator />} SUDT</b>
             <br />
-            Name(e.x. SafeMoon, PornRocket, Dogecoin):
-            <input onChange={e => {setTokenName(e.target.value)}}></input>
-            <br />
-            Symbol(e.x. SAF, PR, DOGE):
-            <input onChange={e => {setTokenSymbol(e.target.value)}}></input>
-            <br />
-            Supply:
-            <input onChange={e => {setTokenSupply(BigInt(e.target.value))}}></input>
-            <br />
-            <button onClick={deployContract} disabled={!tokenName || !tokenSymbol || !tokenSupply}>Deploy</button>
-            <br />
-            <br />
-            <input onChange={e => {setBalanceAccountAddress(e.target.value)}}></input>
-            <button onClick={getBalance} disabled={!contract}>Check Balance</button>
-            <br />
-            Balance: {balance}
+
+            <div className={contract ? "" : "hidden"}>
+            
+            <div className={!bankCreated ? "" : "none"}>
+            <button onClick={createBank}>Create Bank</button>
+            </div>
+
+
+
+            </div>
             <br />
             <hr />
-            Address: 
-            <input onChange={e => {setTransferAddress(e.target.value)}}></input>
-            Amount: 
-            <input onChange={e => {setTransferAmount(Number(e.target.value))}}></input>
-            <button onClick={transfer} disabled={!contract}>Transfer</button>
-            <br />
-            <hr />
-            The contract is deployed on Nervos Layer 2 - Godwoken + Polyjuice. After each
-            transaction you might need to wait up to 120 seconds for the status to be reflected.
             <ToastContainer />
         </div>
     );
