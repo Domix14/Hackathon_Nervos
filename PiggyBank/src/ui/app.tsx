@@ -50,6 +50,7 @@ export function App() {
     const [unlockedBalance, setUnlockedBalance] = useState<string>();
     const [timelock, setTimelock] = useState<number>();
     const [bankCreated, setBankCreated] = useState(false);
+    const [contractAddress, setContractAddress] = useState<string>();
 
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
@@ -188,17 +189,20 @@ export function App() {
             Your Polyjuice address: <b>{polyjuiceAddress || ' - '}</b>
             <br />
             <br />
-            Contract address: <b>{contract?.address || '-'}</b>
-            <br />
-            <br />
             Nervos Layer 2 balance:{' '}
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
             <br />
+            <div style={{ display: (!contract ? 'block' : 'none') }}>
+            Contract address: <input onChange={e => {setContractAddress(e.target.value)}}></input>
+            <button onClick={() => {setExistingContractAddress(contractAddress)}}>Use existing contract</button> or <button onClick={deployContract}>Deploy new contract</button>
+            </div>
 
-            <div className={contract ? "" : "hidden"}>
-            
-            <div className={!bankCreated ? "" : "none"}>
+            <div style={{ display: (contract ? 'block' : 'none') }}>
+            Contract address: <b>{contract?.address || '-'}</b>
+            <br />
+            <br />
+            <div style={{ display: (!bankCreated ? 'block' : 'none') }}>
             <button onClick={createBank}>Create Bank</button>
             </div>
 
