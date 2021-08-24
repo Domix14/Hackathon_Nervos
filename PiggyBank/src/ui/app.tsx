@@ -240,9 +240,7 @@ export function App() {
         getUnlockedBalance();
         getRemainingTime();
 
-        if(unlockedBalance != "0" || remainingTime != "0") {
-            setBankCreated(true);
-        } else {
+        if(unlockedBalance == "0" || remainingTime == "0") {
             setBankCreated(false);
         }
     })
