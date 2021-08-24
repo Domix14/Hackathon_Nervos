@@ -8,7 +8,7 @@ contract PiggyBank {
     timelocks[msg.sender] =  block.timestamp + (_lockTime * 1 minutes);
   }
 
-  function deposit(uint _timelock) public payable {
+  function deposit() public payable {
     require(timelocks[msg.sender] > block.timestamp);
     balances[msg.sender] += msg.value;
   }

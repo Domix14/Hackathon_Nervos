@@ -45,9 +45,9 @@ export function App() {
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
 
-    const [remainingTime, setRemainingTime] = useState<number>();
+    const [remainingTime, setRemainingTime] = useState<string>();
     const [depositAmount, setDepositAmount] = useState<string>();
-    const [unlockedBalance, setUnlockedBalance] = useState<number>();
+    const [unlockedBalance, setUnlockedBalance] = useState<string>();
     const [timelock, setTimelock] = useState<number>();
     const [bankCreated, setBankCreated] = useState(false);
 
@@ -173,7 +173,7 @@ export function App() {
         getUnlockedBalance();
         getRemainingTime();
 
-        if(unlockedBalance != 0 || remainingTime != 0) {
+        if(unlockedBalance != "0" || remainingTime != "0") {
             setBankCreated(true);
         }
     })
