@@ -32,7 +32,7 @@ export class PiggyBankWrapper {
         return unlockedBalance;
     }
 
-    async createBank(fromAddress: string, timelock: number) {
+    async createBank(fromAddress: string, timelock: string) {
 
         await this.contract.methods.createBank(timelock).send({
             ...DEFAULT_SEND_OPTIONS,

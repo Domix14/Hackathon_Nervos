@@ -45,12 +45,17 @@ export function App() {
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
 
-    const [remainingTime, setRemainingTime] = useState<string>();
-    const [depositAmount, setDepositAmount] = useState<string>();
+    const [remainingTime, setRemainingTime] = useState<string>("0");
+    const [depositAmount, setDepositAmount] = useState<string>("0");
     const [unlockedBalance, setUnlockedBalance] = useState<string>();
-    const [timelock, setTimelock] = useState<number>();
+    const [timelock, setTimelock] = useState<string>("0");
     const [bankCreated, setBankCreated] = useState(false);
     const [contractAddress, setContractAddress] = useState<string>();
+
+    const [daysCounter, setDaysCounter] = useState<number>(0);
+    const [hoursCounter, setHoursCounter] = useState<number>(0);
+    const [minutesCounter, setMinutesCounter] = useState<number>(0);
+    const [secondsCounter, setSecondsCounter] = useState<number>(0);
 
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
@@ -125,6 +130,21 @@ export function App() {
     async function getRemainingTime() {
         const _remainingTime = await contract.getRemainingTimelock(account);
         setRemainingTime(_remainingTime);
+
+        var time = Number(_remainingTime);
+        const days = time / (60 * 60 * 24);
+        time = time % (60 * 60 * 24);
+        setDaysCounter(days);
+
+        const hours = time / (60 * 60);
+        time = time % (60 * 60);
+        setHoursCounter(hours);
+
+        const minutes = time / (60);
+        time = time % (60);
+        setMinutesCounter(minutes);
+
+        setSecondsCounter(time);
     }
 
     async function getUnlockedBalance() {
@@ -176,8 +196,11 @@ export function App() {
 
         if(unlockedBalance != "0" || remainingTime != "0") {
             setBankCreated(true);
+        } else {
+            setBankCreated(false);
         }
     })
+    
 
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
 
@@ -202,11 +225,24 @@ export function App() {
             Contract address: <b>{contract?.address || '-'}</b>
             <br />
             <br />
+
             <div style={{ display: (!bankCreated ? 'block' : 'none') }}>
+            Set timelock and create own PiggyBank! You will be able to widthraw your savings when timelock ends.
+            Timelock: <input onChange={e => {setTimelock(e.target.value)}}></input> minutes
             <button onClick={createBank}>Create Bank</button>
             </div>
 
+            <div style={{ display: ((bankCreated && remainingTime == "0" && unlockedBalance != "0") ? 'block' : 'none') }}>
+            <h2>It's over! You can widthraw your savings.</h2><br />
+            <button onClick={widthraw}>Widthraw</button>
+            </div>
 
+            <div style={{ display: ((bankCreated && remainingTime != "0") ? 'block' : 'none') }}>
+            <h2>Timelock counter: {daysCounter} days {hoursCounter} hours {minutesCounter} minutes {secondsCounter} seconds </h2>   <button onClick={getRemainingTime}>Update</button> 
+            <br />
+            <br />
+            Deposit amount: <input onChange={e => {setDepositAmount(e.target.value)}}></input> <button onClick={deposit}>Deposit</button>
+            </div>
 
             </div>
             <br />
