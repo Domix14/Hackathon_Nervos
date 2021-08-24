@@ -268,6 +268,9 @@ export function App() {
 
             <div style={{ display: (contract ? 'block' : 'none') }}>
             Contract address: <b>{contract?.address || '-'}</b>
+            Remaining time: {remainingTime}  <button onClick={getRemainingTime}>Update</button>
+            <br />
+            Unlocked balance: {unlockedBalance} <button onClick={getUnlockedBalance}>Update</button>
             <br />
             <br />
 
