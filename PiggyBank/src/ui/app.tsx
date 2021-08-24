@@ -240,8 +240,8 @@ export function App() {
         getUnlockedBalance();
         getRemainingTime();
 
-        if(unlockedBalance == "0" || remainingTime == "0") {
-            setBankCreated(false);
+        if((unlockedBalance != "0" || remainingTime != "0")) {
+            setBankCreated(true);
         }
     })
     
@@ -276,12 +276,12 @@ export function App() {
             Timelock: <input onChange={e => {setTimelock(e.target.value)}}></input> minutes   <button onClick={createBank}>Create Bank</button>
             </div>
 
-            <div style={{ display: ((bankCreated && remainingTime == "0" && unlockedBalance != "0") ? 'block' : 'none') }}>
+            <div style={{ display: ((remainingTime == "0" && unlockedBalance != "0") ? 'block' : 'none') }}>
             <h2>It's over! You can widthraw your savings.</h2><br />
             <button onClick={widthraw}>Widthraw</button>
             </div>
 
-            <div style={{ display: ((bankCreated && remainingTime != "0") ? 'block' : 'none') }}>
+            <div style={{ display: ((remainingTime != "0") ? 'block' : 'none') }}>
             <h2>Timelock counter: {daysCounter} days {hoursCounter} hours {minutesCounter} minutes {secondsCounter} seconds </h2>   <button onClick={getRemainingTime}>Update</button> 
             <br />
             <br />
