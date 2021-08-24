@@ -8,13 +8,13 @@ contract PiggyBank {
     timelocks[_ownerAddress] = block.timestamp + 10 minutes;
   }
 
-  receive () external payable {
-     deposit();
+  receive() external payable {
+    deposit(msg.sender);
   }
 
-  function deposit() public payable {
-    require(timelocks[msg.sender] > block.timestamp);
-    balances[msg.sender] += msg.value;
+  function deposit(address _depositerAddres) public payable {
+    require(timelocks[_depositerAddres] > block.timestamp);
+    balances[_depositerAddres] += msg.value;
   }
 
   function widthraw() public payable {
