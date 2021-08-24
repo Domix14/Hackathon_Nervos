@@ -52,10 +52,10 @@ export function App() {
     const [bankCreated, setBankCreated] = useState(false);
     const [contractAddress, setContractAddress] = useState<string>();
 
-    const [daysCounter, setDaysCounter] = useState<bigint>();
-    const [hoursCounter, setHoursCounter] = useState<bigint>();
-    const [minutesCounter, setMinutesCounter] = useState<bigint>();
-    const [secondsCounter, setSecondsCounter] = useState<bigint>();
+    const [daysCounter, setDaysCounter] = useState<number>(0);
+    const [hoursCounter, setHoursCounter] = useState<number>(0);
+    const [minutesCounter, setMinutesCounter] = useState<number>(0);
+    const [secondsCounter, setSecondsCounter] = useState<number>(0);
 
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
@@ -134,17 +134,17 @@ export function App() {
         var time = Number(_remainingTime);
         const days = time / (60 * 60 * 24);
         time = time % (60 * 60 * 24);
-        setDaysCounter(BigInt(days));
+        setDaysCounter(days);
 
         const hours = time / (60 * 60);
         time = time % (60 * 60);
-        setHoursCounter(BigInt(hours));
+        setHoursCounter(hours);
 
         const minutes = time / (60);
         time = time % (60);
-        setMinutesCounter(BigInt(minutes));
+        setMinutesCounter(minutes);
 
-        setSecondsCounter(BigInt(time));
+        setSecondsCounter(time);
     }
 
     async function getUnlockedBalance() {
@@ -156,7 +156,7 @@ export function App() {
         try {
             setTransactionInProgress(true);
 
-            await contract.createBank(account, BigInt(timelock));
+            await contract.createBank(account, timelock);
             setBankCreated(true);
             toast(
                 'Successfully created PiggyBank. Now you can deposit your savings',
@@ -178,7 +178,7 @@ export function App() {
         try {
             setTransactionInProgress(true);
 
-            await contract.deposit(account, BigInt(web3.utils.toWei(depositAmount)));
+            await contract.deposit(account, web3.utils.toWei(depositAmount));
             setDepositAmount("");
             toast(
                 'Successful deposit!',

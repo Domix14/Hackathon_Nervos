@@ -5,7 +5,7 @@ contract PiggyBank {
   mapping(address => uint256) timelocks;
 
   function createBank(uint _lockTime) public {
-    timelocks[msg.sender] =  block.timestamp + (_lockTime * 1 minutes);
+    timelocks[msg.sender] =  block.timestamp + 10 minutes;
   }
 
   function deposit() public payable {

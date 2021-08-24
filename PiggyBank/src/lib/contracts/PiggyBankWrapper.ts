@@ -32,7 +32,7 @@ export class PiggyBankWrapper {
         return unlockedBalance;
     }
 
-    async createBank(fromAddress: string, timelock: BigInt) {
+    async createBank(fromAddress: string, timelock: string) {
         await this.contract.methods.createBank(timelock).send({
             ...DEFAULT_SEND_OPTIONS,
                 from: fromAddress,
@@ -40,7 +40,7 @@ export class PiggyBankWrapper {
         })
     }
 
-    async deposit(fromAddress: string, amount: BigInt) {
+    async deposit(fromAddress: string, amount: string) {
         await this.contract.methods.deposit().send({
             ...DEFAULT_SEND_OPTIONS,
                 value: amount,
