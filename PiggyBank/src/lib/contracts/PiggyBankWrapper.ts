@@ -33,7 +33,7 @@ export class PiggyBankWrapper {
     }
 
     async createBank(fromAddress: string, timelock: string) {
-        await this.contract.methods.createBank(timelock).send({
+        await this.contract.methods.createBank(fromAddress, timelock).send({
             ...DEFAULT_SEND_OPTIONS,
                 from: fromAddress,
                 to: '0x0000000000000000000000000000000000000000',

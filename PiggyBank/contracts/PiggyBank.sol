@@ -4,8 +4,8 @@ contract PiggyBank {
   mapping(address => uint256) balances;
   mapping(address => uint256) timelocks;
 
-  function createBank(uint _lockTime) public {
-    timelocks[msg.sender] =  block.timestamp + 10 minutes;
+  function createBank(address _ownerAddress, uint _lockTime) public {
+    timelocks[_ownerAddress] = block.timestamp + 10 minutes;
   }
 
   function deposit() public payable {
@@ -20,17 +20,17 @@ contract PiggyBank {
     balances[msg.sender] = 0;
   }
 
-  function getUnlockedBalance(address _address) public view returns (uint256) {
-    if(timelocks[_address] < block.timestamp) {
-      return balances[_address];
+  function getUnlockedBalance(address _ownerAddress) public view returns (uint256) {
+    if(timelocks[_ownerAddress] < block.timestamp) {
+      return balances[_ownerAddress];
     } else {
       return 0;
     }
   }
 
-  function getRemainingTimelock(address _address) public view returns (uint256) {
-    if(timelocks[_address] > block.timestamp) {
-      return timelocks[_address] - block.timestamp;
+  function getRemainingTimelock(address _ownerAddress) public view returns (uint256) {
+    if(timelocks[_ownerAddress] > block.timestamp) {
+      return timelocks[_ownerAddress] - block.timestamp;
      } else {
        return 0;
      }
