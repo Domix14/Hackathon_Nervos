@@ -232,7 +232,7 @@ export function App() {
             <br />
             SUDT Balance: <b>{sudtBalance ? sudtBalance : <LoadingIndicator />}</b>   <button onClick={loadSudtBalance}> Update </button>
             <br />
-            CKEth Balance: <b>{ckethBalance ? ckethBalance : <LoadingIndicator />}</b>   <button onClick={loadCkethBalance}> Update </button>
+            CKEth Balance: <b>{ckethBalance ? web3.utils.fromWei(ckethBalance) : <LoadingIndicator />}</b>   <button onClick={loadCkethBalance}> Update </button>
             <br />
             Deposit address: {depositAddress || " - "}
             <br />
