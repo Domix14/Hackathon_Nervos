@@ -124,6 +124,7 @@ export function App() {
     }
 
     async function getMovieRating() {
+        setDisplayRating("0");
         const _rating = await contract.getMovieRating(inputMovieName);
         setDisplayRating(_rating);
         setDisplayMovieName(inputMovieName);
