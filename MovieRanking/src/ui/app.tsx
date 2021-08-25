@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PolyjuiceHttpProvider } from '@polyjuice-provider/web3';
 import { AddressTranslator } from 'nervos-godwoken-integration';
 
-import { PiggyBankWrapper } from '../lib/contracts/PiggyBankWrapper';
+import { MovieRankingWrapper } from '../lib/contracts/MovieRankingWrapper';
 import { CONFIG } from '../config';
 
 async function createWeb3() {
@@ -41,21 +41,17 @@ async function createWeb3() {
 
 export function App() {
     const [web3, setWeb3] = useState<Web3>(null);
-    const [contract, setContract] = useState<PiggyBankWrapper>();
+    const [contract, setContract] = useState<MovieRankingWrapper>();
     const [accounts, setAccounts] = useState<string[]>();
     const [l2Balance, setL2Balance] = useState<bigint>();
 
-    const [remainingTime, setRemainingTime] = useState<string>("0");
-    const [depositAmount, setDepositAmount] = useState<string>("0");
-    const [unlockedBalance, setUnlockedBalance] = useState<string>("0");
-    const [timelock, setTimelock] = useState<string>("0");
-    const [bankCreated, setBankCreated] = useState(false);
+    
     const [contractAddress, setContractAddress] = useState<string>();
+    const [displayMovieName, setDisplayMovieName] = useState<string>();
+    const [displayRating, setDisplayRating] = useState<string>();
+    const [inputMovieName, setInputMovieName] = useState<string>();
+    const [inputRating, setInputRating] = useState<string>();
 
-    const [daysCounter, setDaysCounter] = useState<number>(0);
-    const [hoursCounter, setHoursCounter] = useState<number>(0);
-    const [minutesCounter, setMinutesCounter] = useState<number>(0);
-    const [secondsCounter, setSecondsCounter] = useState<number>(0);
 
     const [deployTxHash, setDeployTxHash] = useState<string | undefined>();
     const [polyjuiceAddress, setPolyjuiceAddress] = useState<string | undefined>();
@@ -96,7 +92,7 @@ export function App() {
     const account = accounts?.[0];
 
     async function deployContract() {
-        const _contract = new PiggyBankWrapper(web3);
+        const _contract = new MovieRankingWrapper(web3);
 
         try {
             setDeployTxHash(undefined);
@@ -121,86 +117,25 @@ export function App() {
     }
 
     async function setExistingContractAddress(contractAddress: string) {
-        const _contract = new PiggyBankWrapper(web3);
+        const _contract = new MovieRankingWrapper(web3);
         _contract.useDeployed(contractAddress.trim());
 
         setContract(_contract);
     }
 
-    async function getRemainingTime() {
-        const _remainingTime = await contract.getRemainingTimelock(account);
-        setRemainingTime(_remainingTime);
-
-        var time = Number(_remainingTime);
-        const days = time / (60 * 60 * 24);
-        time = time % (60 * 60 * 24);
-        setDaysCounter(days);
-
-        const hours = time / (60 * 60);
-        time = time % (60 * 60);
-        setHoursCounter(hours);
-
-        const minutes = time / (60);
-        time = time % (60);
-        setMinutesCounter(minutes);
-
-        setSecondsCounter(time);
+    async function getMovieRating() {
+        const _rating = await contract.getMovieRating(inputMovieName);
+        setDisplayRating(_rating);
     }
 
-    async function getUnlockedBalance() {
-        const _unlockedBalance = await contract.getUnlockedBalance(account);
-        setUnlockedBalance(_unlockedBalance);
-    }
-
-    async function createBank() {
+    async function rateMovie() {
         try {
             setTransactionInProgress(true);
 
-            await contract.createBank(account, timelock);
-            setBankCreated(true);
+            const transactionHash = await contract.rateMovie(account, inputMovieName, inputRating);
+
             toast(
-                'Successfully created PiggyBank. Now you can deposit your savings',
-                { type: 'success' }
-            );
-        } catch (error) {
-            console.error(error);
-            toast.error(
-                'There was an error sending your transaction. Please check developer console.'
-            );
-            setBankCreated(false);
-        } finally {
-            setTransactionInProgress(false);
-            getRemainingTime();
-        }
-    }
-
-    async function deposit() {
-        try {
-            setTransactionInProgress(true);
-
-            await contract.deposit(account, Number(web3.utils.toWei(depositAmount)));
-            toast(
-                'Successful deposit!',
-                { type: 'success' }
-            );
-        } catch (error) {
-            console.error(error);
-            toast.error(
-                'There was an error sending your transaction. Please check developer console.'
-            );
-        } finally {
-            setTransactionInProgress(false);
-            setDepositAmount("");
-        }
-    }
-
-    async function widthraw() {
-        try {
-            setTransactionInProgress(true);
-
-            await contract.widthraw(account);
-            toast(
-                'Successful widthrawal!',
+                'Successfully rated movie!',
                 { type: 'success' }
             );
         } catch (error) {
@@ -232,19 +167,6 @@ export function App() {
             }
         })();
     });
-
-    useEffect(() => {
-        if(!contract) {
-            return;
-        }
-
-        getUnlockedBalance();
-        getRemainingTime();
-
-        if((unlockedBalance != "0" || remainingTime != "0")) {
-            setBankCreated(true);
-        }
-    }, [unlockedBalance, remainingTime, bankCreated])
     
 
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
@@ -268,30 +190,21 @@ export function App() {
 
             <div style={{ display: (contract ? 'block' : 'none') }}>
             Contract address: <b>{contract?.address || '-'}</b>
-            Remaining time: {remainingTime}  <button onClick={getRemainingTime}>Update</button>
+            <br /><br /><br />
+            Check movie rating.
             <br />
-            Unlocked balance: {unlockedBalance} <button onClick={getUnlockedBalance}>Update</button>
-            <br />
-            <br />
-
-            <div style={{ display: (!bankCreated ? 'block' : 'none') }}>
-            Set timelock and create own PiggyBank! You will be able to widthraw your savings when timelock ends.
-            <br />
-            Timelock: <input onChange={e => {setTimelock(e.target.value)}}></input> minutes   <button onClick={createBank}>Create Bank</button>
+            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  <button onClick={getMovieRating}> Check </button>
+            <br /><br />
+            <div style={{ display: (!displayMovieName ? 'block' : 'none') }}>
+            <h2>
+            Name: {displayMovieName}
+            Rating: {displayRating}
+            </h2>
             </div>
-
-            <div style={{ display: ((remainingTime == "0" && unlockedBalance != "0") ? 'block' : 'none') }}>
-            <h2>It's over! You can widthraw your savings.</h2><br />
-            <button onClick={widthraw}>Widthraw</button>
-            </div>
-
-            <div style={{ display: ((remainingTime != "0") ? 'block' : 'none') }}>
-            <h2>Timelock counter: {daysCounter} days {hoursCounter} hours {minutesCounter} minutes {secondsCounter} seconds </h2>   <button onClick={getRemainingTime}>Update</button> 
-            <br />
-            <br />
-            Deposit amount: <input onChange={e => {setDepositAmount(e.target.value)}}></input> <button onClick={deposit}>Deposit</button>
-            </div>
-
+            
+            <br /><br />
+            Rate movie.
+            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  Rate: <input onChange={e => {setInputRating(e.target.value)}} />  <button onClick={rateMovie}> Rate movie </button>
             </div>
             <br />
             <hr />
