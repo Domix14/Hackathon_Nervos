@@ -48,7 +48,7 @@ export function App() {
     
     const [contractAddress, setContractAddress] = useState<string>();
     const [displayMovieName, setDisplayMovieName] = useState<string>();
-    const [displayRating, setDisplayRating] = useState<string>();
+    const [displayRating, setDisplayRating] = useState<string>("0");
     const [inputMovieName, setInputMovieName] = useState<string>();
     const [inputRating, setInputRating] = useState<string>();
 
@@ -126,6 +126,7 @@ export function App() {
     async function getMovieRating() {
         const _rating = await contract.getMovieRating(inputMovieName);
         setDisplayRating(_rating);
+        setDisplayMovieName(inputMovieName);
     }
 
     async function rateMovie() {
@@ -191,11 +192,11 @@ export function App() {
             <div style={{ display: (contract ? 'block' : 'none') }}>
             Contract address: <b>{contract?.address || '-'}</b>
             <br /><br /><br />
-            Check movie rating.
+            <h3>Check movie rating.</h3>
             <br />
             Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  <button onClick={getMovieRating}> Check </button>
             <br /><br />
-            <div style={{ display: (!displayMovieName ? 'block' : 'none') }}>
+            <div style={{ display: (displayRating != "0" ? 'block' : 'none') }}>
             <h2>
             Name: {displayMovieName}
             Rating: {displayRating}
@@ -203,8 +204,8 @@ export function App() {
             </div>
             
             <br /><br />
-            Rate movie.
-            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  Rate: <input onChange={e => {setInputRating(e.target.value)}} />  <button onClick={rateMovie}> Rate movie </button>
+            <h3>Rate movie.</h3><br />
+            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  Rate (0 - 100): <input onChange={e => {setInputRating(e.target.value)}} />  <button onClick={rateMovie}> Rate movie </button>
             </div>
             <br />
             <hr />

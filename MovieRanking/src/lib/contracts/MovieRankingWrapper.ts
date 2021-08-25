@@ -28,7 +28,7 @@ export class MovieRankingWrapper {
     }
 
     async rateMovie(fromAddress: string, movieName: string, rate: string) {
-        await this.contract.methods.rateMovie(fromAddress, movieName, rate).send({
+        await this.contract.methods.rateMovie(movieName, rate).send({
             ...DEFAULT_SEND_OPTIONS,
                 from: fromAddress
         })

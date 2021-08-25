@@ -13,7 +13,7 @@ contract MovieRanking {
   mapping(uint256 => Rating) ratings;
 
   function rateMovie(string memory _movieName, uint256 _rate) public {
-    require(_rate <= 100);
+    require(_rate <= 100 && _rate >= 1);
     ratings[ratingCount] = Rating(uint8(_rate), _movieName, msg.sender);
     ratingCount++;
   }
