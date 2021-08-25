@@ -2,16 +2,16 @@
 
 ## Dapp
 
-Video: https://www.youtube.com/watch?v=xRBpwVNso4U
+Video: https://www.youtube.com/watch?v=AmrvqUv48OM
 
 ![](dapp.png)
 
 ## Dapp Github link
-https://github.com/Domix14/Hackathon_Nervos/tree/main/ShitcoinDeployer
+https://github.com/Domix14/Hackathon_Nervos/tree/main/MovieRanking
 
 ## Smart contract
 
-Address: 0xFE1DC3f4B17f221575F7340A027EB6f924483361
+Address: 0x99318250517941b45ef3584075F47b3b654b28bf
 
 ```
 "abi": [
@@ -19,76 +19,16 @@ Address: 0xFE1DC3f4B17f221575F7340A027EB6f924483361
       "inputs": [
         {
           "internalType": "string",
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_symbol",
+          "name": "_movieName",
           "type": "string"
         },
         {
           "internalType": "uint256",
-          "name": "_supply",
+          "name": "_rate",
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [],
-      "name": "decimals",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "name",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "symbol",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "recipient",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
+      "name": "rateMovie",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -96,12 +36,12 @@ Address: 0xFE1DC3f4B17f221575F7340A027EB6f924483361
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
+          "internalType": "string",
+          "name": "_movieName",
+          "type": "string"
         }
       ],
-      "name": "balanceOf",
+      "name": "getMovieRating",
       "outputs": [
         {
           "internalType": "uint256",
@@ -109,7 +49,7 @@ Address: 0xFE1DC3f4B17f221575F7340A027EB6f924483361
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     }
   ]
