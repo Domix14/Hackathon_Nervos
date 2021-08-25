@@ -206,19 +206,21 @@ export function App() {
             if (_accounts && _accounts[0]) {
                 const _l2Balance = BigInt(await _web3.eth.getBalance(_accounts[0]));
                 setL2Balance(_l2Balance);
-                loadCkethBalance();
-                loadSudtBalance();
             }
 
             
         })();
     });
     
+    useEffect(() => {
+        loadCkethBalance();
+        loadSudtBalance();
+    }, [polyjuiceAddress])
 
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
 
     return (
-        <div>
+        <div style={{whiteSpace: 'pre-wrap', overflowWrap: 'break-word'}}>
             Your ETH address: <b>{accounts?.[0]}</b>
             <br />
             <br />
@@ -228,9 +230,9 @@ export function App() {
             Nervos Layer 2 balance:{' '}
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
-            SUDT Balance: {sudtBalance ? sudtBalance : <LoadingIndicator />}   <button onClick={loadSudtBalance}> Update </button>
+            SUDT Balance: <b>{sudtBalance ? sudtBalance : <LoadingIndicator />}</b>   <button onClick={loadSudtBalance}> Update </button>
             <br />
-            CKEth Balance: {ckethBalance ? ckethBalance : <LoadingIndicator />}   <button onClick={loadCkethBalance}> Update </button>
+            CKEth Balance: <b>{ckethBalance ? ckethBalance : <LoadingIndicator />}</b>   <button onClick={loadCkethBalance}> Update </button>
             <br />
             Deposit address: {depositAddress || " - "}
             <br />
