@@ -199,13 +199,14 @@ export function App() {
             <div style={{ display: (displayRating != "0" ? 'block' : 'none') }}>
             <h2>
             Name: {displayMovieName}
+            <br />
             Rating: {displayRating}
             </h2>
             </div>
             
             <br /><br />
             <h3>Rate movie.</h3><br />
-            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  Rate (0 - 100): <input onChange={e => {setInputRating(e.target.value)}} />  <button onClick={rateMovie}> Rate movie </button>
+            Movie name: <input onChange={e => {setInputMovieName(e.target.value)}} />  Rate (1 - 100): <input onChange={e => {setInputRating(e.target.value)}} />  <button onClick={rateMovie}> Rate movie </button>
             </div>
             <br />
             <hr />
