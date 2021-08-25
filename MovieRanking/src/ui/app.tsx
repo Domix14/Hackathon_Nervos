@@ -206,10 +206,11 @@ export function App() {
             if (_accounts && _accounts[0]) {
                 const _l2Balance = BigInt(await _web3.eth.getBalance(_accounts[0]));
                 setL2Balance(_l2Balance);
+                loadCkethBalance();
+                loadSudtBalance();
             }
 
-            loadCkethBalance();
-            loadSudtBalance();
+            
         })();
     });
     
@@ -227,14 +228,14 @@ export function App() {
             Nervos Layer 2 balance:{' '}
             <b>{l2Balance ? (l2Balance / 10n ** 8n).toString() : <LoadingIndicator />} CKB</b>
             <br />
-            SUDT Balance: {sudtBalance ? sudtBalance : <LoadingIndicator />}   <button onClick={loadSudtBalance} />
+            SUDT Balance: {sudtBalance ? sudtBalance : <LoadingIndicator />}   <button onClick={loadSudtBalance}> Update </button>
             <br />
-            CKEth Balance: {ckethBalance ? ckethBalance : <LoadingIndicator />}   <button onClick={loadCkethBalance} />
+            CKEth Balance: {ckethBalance ? ckethBalance : <LoadingIndicator />}   <button onClick={loadCkethBalance}> Update </button>
             <br />
             Deposit address: {depositAddress || " - "}
             <br />
             <br />
-            You can bridge your assets using <a href = "https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos"> Force Bridge </a>
+            You can bridge your assets using <b><a href = "https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos"> Force Bridge </a></b> and <b>deposit address</b>
             <br />
             <br />
             <div style={{ display: (!contract ? 'block' : 'none') }}>
